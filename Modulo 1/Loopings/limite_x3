@@ -1,0 +1,7 @@
+limite = int(input("Digite um número limite: "))
+numero = 1
+
+while numero <= limite:
+    if numero % 3 == 0:
+        print(numero)
+    numero += 1

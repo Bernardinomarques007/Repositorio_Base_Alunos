@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <title>Remover Usuário</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: #f9f9f9;
+        }
+
+        .container {
+            max-width: 400px;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.1);
+            margin: auto;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        p {
+            margin: 10px 0;
+            color: #555;
+        }
+
+        strong {
+            font-size: 1.2rem;
+            color: #000;
+        }
+
+        em {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #d9534f;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        button:hover {
+            background: #c9302c;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Remover Usuário</h1>
+
+        {% if usuario %}
+            <p>Você tem certeza que deseja remover o usuário:</p>
+            <p><strong>{{ usuario.usuario or usuario.name or 'Nome não informado' }}</strong></p>
+            <p><em>{{ usuario.email or 'Email não informado' }}</em></p>
+
+            <form method="post">
+                <button type="submit">Confirmar remoção</button>
+            </form>
+        {% else %}
+            <p>Usuário não encontrado.</p>
+        {% endif %}
+
+        <a href="{{ url_for('index') }}">Voltar</a>
+    </div>
+</body>
+</html>

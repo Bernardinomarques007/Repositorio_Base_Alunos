@@ -1,0 +1,7 @@
+soma = 0
+
+for I in range(0,100):
+    if I  % 2 == 0:
+        soma += I
+        if soma == 2450:
+            print("A soma de todos os numeros pares de 0 a 100 é: ", soma)

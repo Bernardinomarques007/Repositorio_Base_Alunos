@@ -1,0 +1,15 @@
+numero = 0 
+
+while True:
+    print(f"Digite um numero para somar ao {numero} até que o resultado seja 100 ")
+    num = float(input())
+
+    if num >= 0:
+        numero += num
+        if numero >= 100:
+            print("parabéns, agora temos ", numero)
+            break
+        else:
+            print("Continue, já temos", numero)
+    else:
+        print("O numero é menor que 0, por favor digite um numero positivo")

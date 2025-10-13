@@ -1,0 +1,21 @@
+titulo {
+
+    text-align: center;
+}
+
+botao {
+
+
+    height: 100px;
+    width: 100px;
+    font-size: 40px;
+    padding: 20px;
+
+
+}
+
+div {
+
+    display: inline-block;
+    
+}

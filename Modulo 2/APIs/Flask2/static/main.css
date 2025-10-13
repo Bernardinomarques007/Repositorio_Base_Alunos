@@ -1,0 +1,31 @@
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css");
+
+
+insta {
+    position: fixed;   /* fica fixo na tela, mesmo rolando */
+    top: 10px;         /* distância do topo */
+    right: 50px;        /* distância da esquerda */
+    font-size: 30px;   /* tamanho do ícone */
+    color: #E4405F;
+
+
+}
+
+login {
+    position: fixed;  
+    top: 10px;         
+    right: 10px;        
+    font-size: 30px;  
+    color: rgb(23, 0, 128);     
+    text-decoration: none;
+}
+
+whatsapp {
+    position: fixed;  
+    top: 10px;        
+    right: 90px;       
+    font-size: 30px;   
+    color: green;      
+    text-decoration: none;
+}
+
