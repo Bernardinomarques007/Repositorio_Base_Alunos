@@ -1,80 +1,714 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Stream de Mensagens</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Comunicação - Açougue São Vicente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: #f0f0f0;
+        :root {
+            --vermelho-sv: #cc0000;
+            --vermelho-escuro: #990000;
+            --carne-fresca: #ffe6e6;
+            --carne-escura: #330000;
+            --verde-ativo: #2ecc71;
+            --cinza-claro: #f5f5f5;
         }
-        #container {
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 10px;
+            background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), 
+                              url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path d="M20,20 L80,80 M80,20 L20,80" stroke="%23ffcccc" stroke-width="1"/></svg>');
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            height: calc(100vh - 40px);
+        }
+        
+        /* Painel Lateral - Informações do Açougue */
+        .sidebar {
             background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-left: 5px solid var(--vermelho-sv);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-section {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px dashed #eee;
+        }
+        
+        .logo {
+            color: var(--vermelho-sv);
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo-section h1 {
+            color: var(--carne-escura);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo-section p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Status do Açougue */
+        .status-section {
+            margin-bottom: 25px;
+        }
+        
+        .status-title {
+            display: flex;
+            align-items: center;
+            color: var(--carne-escura);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .status-title i {
+            margin-right: 10px;
+            color: var(--vermelho-sv);
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .status-label {
+            color: #555;
+        }
+        
+        .status-value {
+            font-weight: 600;
+        }
+        
+        .status-value.on {
+            color: var(--verde-ativo);
+        }
+        
+        .status-value.off {
+            color: #e74c3c;
+        }
+        
+        /* Lista de Funcionários Online */
+        .staff-section {
+            flex-grow: 1;
+        }
+        
+        .staff-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        
+        .staff-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--cinza-claro);
+            margin-bottom: 8px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .staff-item:hover {
+            background-color: #eaeaea;
+        }
+        
+        .staff-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--vermelho-sv);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+        }
+        
+        .staff-name {
+            flex-grow: 1;
+        }
+        
+        .staff-online {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--verde-ativo);
+        }
+        
+        /* Área Principal - Sistema de Mensagens */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .channel-control {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .channel-control label {
+            font-weight: 600;
+            color: var(--carne-escura);
+            margin-right: 10px;
+        }
+        
+        .channel-control input {
+            width: 80px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 15px;
+            text-align: center;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--vermelho-sv);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--vermelho-escuro);
+        }
+        
+        .btn-success {
+            background-color: var(--verde-ativo);
+            color: white;
+            margin-left: 10px;
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+        }
+        
+        /* Área de Mensagens */
+        .messages-container {
+            flex-grow: 1;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: var(--cinza-claro);
+            overflow-y: auto;
+            max-height: 50vh;
+        }
+        
+        .message {
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            background-color: white;
+            border-left: 4px solid var(--vermelho-sv);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .message-source {
+            font-weight: 700;
+            color: var(--vermelho-sv);
+        }
+        
+        .message-time {
+            color: #888;
+            font-size: 0.8rem;
+        }
+        
+        .message-content {
+            color: #333;
+        }
+        
+        .system-message {
+            border-left-color: #3498db;
+            background-color: #f0f8ff;
+        }
+        
+        .system-message .message-source {
+            color: #3498db;
+        }
+        
+        .urgent-message {
+            border-left-color: #e74c3c;
+            background-color: #ffe6e6;
+            animation: pulse 2s infinite;
+        }
+        
+        .urgent-message .message-source {
+            color: #e74c3c;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+            70% { box-shadow: 0 0 0 6px rgba(231, 76, 60, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+        
+        /* Formulário de Envio */
+        .send-form {
+            background-color: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
-            width: 600px;
-            margin: auto;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            border: 1px solid #eaeaea;
         }
-        #messages {
-            margin-top: 20px;
-            padding: 10px;
-            background: #222;
-            color: #0f0;
-            height: 350px;
-            overflow-y: auto;
-            font-family: monospace;
-            border-radius: 6px;
+        
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+            gap: 15px;
         }
-        input, button {
-            padding: 10px;
-            font-size: 16px;
+        
+        .form-group {
+            flex: 1;
         }
-        button {
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--carne-escura);
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .send-button {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1rem;
+            background-color: var(--vermelho-sv);
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-button:hover {
+            background-color: var(--vermelho-escuro);
+        }
+        
+        .send-button i {
+            margin-right: 8px;
+        }
+        
+        /* Indicador de Conexão */
+        .connection-status {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .connected {
+            background-color: var(--verde-ativo);
+        }
+        
+        .disconnected {
+            background-color: #e74c3c;
+        }
+        
+        /* Responsividade */
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .sidebar {
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .channel-control {
+                flex-wrap: wrap;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <!-- Painel Lateral - Informações do Açougue -->
+        <div class="sidebar">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="fas fa-drumstick-bite"></i>
+                </div>
+                <h1>Açougue São Vicente</h1>
+                <p>Sistema de Comunicação Interna</p>
+                <p style="color: var(--vermelho-sv); font-weight: 600; margin-top: 5px;">Filial SP - Setor Carnes</p>
+            </div>
+            
+            <div class="status-section">
+                <div class="status-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Status do Setor</span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-label">Aberto</span>
+                    <span class="status-value on">● SIM</span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-label">Equipe</span>
+                    <span class="status-value">5/6 presentes</span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-label">Corte Especial</span>
+                    <span class="status-value on">● DISPONÍVEL</span>
+                </div>
+                
+                <div class="status-item">
+                    <span class="status-label">Promoção Picanha</span>
+                    <span class="status-value on">● ATIVA</span>
+                </div>
+            </div>
+            
+            <div class="staff-section">
+                <div class="status-title">
+                    <i class="fas fa-users"></i>
+                    <span>Equipe Online</span>
+                </div>
+                
+                <ul class="staff-list">
+                    <li class="staff-item">
+                        <div class="staff-avatar">MC</div>
+                        <div class="staff-name">Márcio - Açougueiro</div>
+                        <div class="staff-online"></div>
+                    </li>
+                    <li class="staff-item">
+                        <div class="staff-avatar">RA</div>
+                        <div class="staff-name">Ricardo - Auxiliar</div>
+                        <div class="staff-online"></div>
+                    </li>
+                    <li class="staff-item">
+                        <div class="staff-avatar">CA</div>
+                        <div class="staff-name">Carlos - Churrasco</div>
+                        <div class="staff-online"></div>
+                    </li>
+                    <li class="staff-item">
+                        <div class="staff-avatar">FE</div>
+                        <div class="staff-name">Fernanda - Caixa</div>
+                        <div class="staff-online"></div>
+                    </li>
+                </ul>
+            </div>
+            
+            <div style="margin-top: auto; font-size: 0.8rem; color: #888; text-align: center; padding-top: 15px; border-top: 1px dashed #eee;">
+                <i class="fas fa-info-circle"></i> Use os canais para comunicação específica
+            </div>
+        </div>
+        
+        <!-- Área Principal - Sistema de Mensagens -->
+        <div class="main-content">
+            <div class="channel-control">
+                <label for="canal">Canal de Comunicação:</label>
+                <input type="text" id="canal" value="1">
+                <button class="btn btn-primary" onclick="conectar()">
+                    <i class="fas fa-plug"></i> Conectar ao Canal
+                </button>
+                <button class="btn btn-success" onclick="conectarCanal(2)">
+                    <i class="fas fa-fire"></i> Canal Urgências (2)
+                </button>
+                <button class="btn btn-success" onclick="conectarCanal(3)">
+                    <i class="fas fa-shopping-cart"></i> Canal Pedidos (3)
+                </button>
+            </div>
+            
+            <div class="messages-container" id="messages">
+                <div class="message system-message">
+                    <div class="message-header">
+                        <span class="message-source">Sistema Açougue</span>
+                        <span class="message-time" id="current-time">--:--</span>
+                    </div>
+                    <div class="message-content">
+                        Bem-vindo ao sistema de comunicação do Açougue São Vicente. Conecte-se a um canal para começar.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="send-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="source">Seu Nome/Função:</label>
+                        <input type="text" id="source" placeholder="Ex: Márcio - Açougueiro" value="Açougueiro">
+                    </div>
+                    <div class="form-group">
+                        <label for="canal-destino">Canal de Destino:</label>
+                        <input type="text" id="canal-destino" value="1">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">Mensagem:</label>
+                    <textarea id="message" placeholder="Ex: Preciso de 2kg de alcatra no fatiador..."></textarea>
+                </div>
+                
+                <button class="send-button" onclick="enviar()">
+                    <i class="fas fa-paper-plane"></i> Enviar Mensagem
+                </button>
+                
+                <div class="connection-status">
+                    <div class="status-indicator disconnected" id="status-indicator"></div>
+                    <span id="status-text">Desconectado</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<div id="container">
-    <h2>Stream de Mensagens (SSE)</h2>
-
-    <label>Canal:</label>
-    <input type="number" id="channel" value="1">
-    <button onclick="startStream()">Conectar</button>
-
-    <div id="messages"></div>
-</div>
-
-<script>
-    let eventSource = null;
-
-    function startStream() {
-        const channel = document.getElementById("channel").value;
-
-        if (eventSource) {
-            eventSource.close();
+    <script>
+        let eventSource;
+        let currentChannel = 1;
+        
+        // Função para conectar ao canal
+        function conectar() {
+            const channel = document.getElementById("canal").value;
+            conectarCanal(channel);
         }
-
-        eventSource = new EventSource(`/message/${channel}`);
-
-        const messagesDiv = document.getElementById("messages");
-        messagesDiv.innerHTML = "⏳ Aguardando mensagens...\n";
-
-        eventSource.onmessage = function (event) {
-            messagesDiv.innerHTML += `📩 ${event.data}\n`;
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        };
-
-        eventSource.onerror = function () {
-            messagesDiv.innerHTML += "❌ Conexão perdida. Tentando reconectar...\n";
-        };
-    }
-</script>
-
+        
+        // Função para conectar a um canal específico
+        function conectarCanal(channel) {
+            currentChannel = channel;
+            document.getElementById("canal").value = channel;
+            document.getElementById("canal-destino").value = channel;
+            
+            if (eventSource) {
+                eventSource.close();
+            }
+            
+            // Atualiza a interface
+            const messagesBox = document.getElementById("messages");
+            messagesBox.innerHTML = `
+                <div class="message system-message">
+                    <div class="message-header">
+                        <span class="message-source">Sistema Açougue</span>
+                        <span class="message-time">${formatTime(new Date())}</span>
+                    </div>
+                    <div class="message-content">
+                        Conectado ao canal ${channel}. Aguardando mensagens...
+                    </div>
+                </div>
+            `;
+            
+            // Conecta ao EventSource
+            eventSource = new EventSource(`/message/${channel}`);
+            
+            // Atualiza status
+            updateConnectionStatus(true, channel);
+            
+            // Processa mensagens recebidas
+            eventSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    addMessageToUI(data.source, data.content, data.timestamp || new Date().toISOString());
+                } catch (e) {
+                    // Se não for JSON, mostra como texto simples
+                    addMessageToUI("Sistema", event.data, new Date().toISOString());
+                }
+            };
+            
+            eventSource.onerror = function() {
+                updateConnectionStatus(false, channel);
+                addMessageToUI("Sistema", `Erro de conexão com o canal ${channel}. Tentando reconectar...`, new Date().toISOString());
+            };
+        }
+        
+        // Função para enviar mensagem
+        function enviar() {
+            const canal = document.getElementById("canal-destino").value;
+            const fonte = document.getElementById("source").value;
+            const msg = document.getElementById("message").value;
+            
+            if (!fonte || !msg) {
+                alert("Preencha seu nome e a mensagem!");
+                return;
+            }
+            
+            // Envia via fetch
+            fetch(`/message/new?id=${canal}&source=${encodeURIComponent(fonte)}&message=${encodeURIComponent(msg)}`, {
+                method: "POST"
+            })
+            .then(res => res.json())
+            .then(data => {
+                console.log("Resposta do servidor:", data);
+                // A própria mensagem será recebida via EventSource
+                document.getElementById("message").value = "";
+            })
+            .catch(error => {
+                console.error("Erro ao enviar:", error);
+                alert("Erro ao enviar mensagem. Verifique a conexão.");
+            });
+        }
+        
+        // Função para adicionar mensagem na interface
+        function addMessageToUI(source, content, timestamp) {
+            const messagesBox = document.getElementById("messages");
+            const time = timestamp ? formatTime(new Date(timestamp)) : formatTime(new Date());
+            
+            // Determina a classe da mensagem baseada no conteúdo ou remetente
+            let messageClass = "message";
+            if (source === "Sistema" || source === "Sistema Açougue") {
+                messageClass += " system-message";
+            } else if (content.toLowerCase().includes("urgente") || content.toLowerCase().includes("urgência")) {
+                messageClass += " urgent-message";
+            }
+            
+            const messageElement = `
+                <div class="${messageClass}">
+                    <div class="message-header">
+                        <span class="message-source">${source}</span>
+                        <span class="message-time">${time}</span>
+                    </div>
+                    <div class="message-content">${content}</div>
+                </div>
+            `;
+            
+            messagesBox.innerHTML += messageElement;
+            messagesBox.scrollTop = messagesBox.scrollHeight;
+        }
+        
+        // Função para atualizar status da conexão
+        function updateConnectionStatus(connected, channel) {
+            const indicator = document.getElementById("status-indicator");
+            const statusText = document.getElementById("status-text");
+            
+            if (connected) {
+                indicator.className = "status-indicator connected";
+                statusText.textContent = `Conectado ao canal ${channel}`;
+            } else {
+                indicator.className = "status-indicator disconnected";
+                statusText.textContent = "Desconectado";
+            }
+        }
+        
+        // Função para formatar hora
+        function formatTime(date) {
+            return date.toLocaleTimeString('pt-BR', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+        }
+        
+        // Atualiza a hora atual
+        function updateCurrentTime() {
+            const timeElement = document.getElementById("current-time");
+            if (timeElement) {
+                timeElement.textContent = formatTime(new Date());
+            }
+        }
+        
+        // Inicialização
+        document.addEventListener("DOMContentLoaded", function() {
+            // Atualiza a hora a cada minuto
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 60000);
+            
+            // Conecta automaticamente ao canal 1 (opcional)
+            // setTimeout(() => conectarCanal(1), 1000);
+            
+            // Permite enviar mensagem com Enter (Ctrl+Enter)
+            document.getElementById("message").addEventListener("keydown", function(e) {
+                if (e.ctrlKey && e.key === "Enter") {
+                    enviar();
+                }
+            });
+        });
+        
+        // Funções para mensagens pré-definidas (útil para o açougue)
+        function sendPredefinedMessage(type) {
+            const messages = {
+                "need-assistance": "Preciso de assistência no balcão principal.",
+                "out-of-stock": "Produto esgotado: ",
+                "special-order": "Pedido especial solicitado por cliente.",
+                "cleaning": "Área de corte precisa de limpeza.",
+                "break": "Indo para o intervalo, voltando em 15min."
+            };
+            
+            const msg = messages[type] || "Mensagem pré-definida";
+            document.getElementById("message").value = msg;
+        }
+    </script>
 </body>
 </html>
